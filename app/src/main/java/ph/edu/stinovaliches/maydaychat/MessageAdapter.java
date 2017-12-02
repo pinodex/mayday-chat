@@ -61,23 +61,19 @@ public class MessageAdapter extends BaseAdapter {
         ViewHolder holder = null;
         Message message = messages.get(position);
 
-        if (convertView == null) {
-            holder = new ViewHolder();
+        holder = new ViewHolder();
 
-            convertView = mInflater.inflate(R.layout.layout_message_receiver, null);
+        convertView = mInflater.inflate(R.layout.layout_message_receiver, null);
 
-            if (Application.communication.getNodeId() == message.nodeId) {
-                convertView = mInflater.inflate(R.layout.layout_message_sender, null);
-            }
-
-            holder.senderName = convertView.findViewById(R.id.senderName);
-            holder.senderInitial = convertView.findViewById(R.id.chatHeadContent);
-            holder.messageContent = convertView.findViewById(R.id.messageContent);
-
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder)convertView.getTag();
+        if (Application.communication.getNodeId().equalsIgnoreCase(message.nodeId)) {
+            convertView = mInflater.inflate(R.layout.layout_message_sender, null);
         }
+
+        holder.senderName = convertView.findViewById(R.id.senderName);
+        holder.senderInitial = convertView.findViewById(R.id.chatHeadContent);
+        holder.messageContent = convertView.findViewById(R.id.messageContent);
+
+        convertView.setTag(holder);
 
         holder.senderName.setText(message.senderName);
         holder.senderInitial.setText(
