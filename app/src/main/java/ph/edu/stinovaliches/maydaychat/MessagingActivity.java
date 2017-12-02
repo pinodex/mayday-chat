@@ -3,11 +3,11 @@ package ph.edu.stinovaliches.maydaychat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class ChatRoom extends AppCompatActivity {
+public class MessagingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat_room);
+        setContentView(R.layout.activity_messaging);
     }
 }

@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MaydayChat.iml" filepath="$PROJECT_DIR$/MaydayChat.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mayday-chat.iml" filepath="$PROJECT_DIR$/mayday-chat.iml" />
     </modules>
   </component>
 </project>

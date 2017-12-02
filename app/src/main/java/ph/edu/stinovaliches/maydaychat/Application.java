@@ -5,29 +5,35 @@ package ph.edu.stinovaliches.maydaychat;
  */
 
 import android.content.Context;
-import android.provider.Settings.Secure;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 
 public class Application {
 
     public static int ID = 1;
 
-    public static int NODE_ID = 1;
+    public static Communication communication;
 
-    public static long generateNodeId(Context context) {
-        String deviceId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
+    public static void showAlertDialog(Context context, String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-        byte[] deviceIdBytes = deviceId.getBytes();
-        long result = 1;
-
-        for (byte b: deviceIdBytes) {
-            result *= b;
+        if (title != null) {
+            builder.setTitle(title);
         }
 
-        if (result < 0) {
-            result *= -1;
+        if (message != null) {
+            builder.setMessage(message);
         }
 
-        return result;
+        builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 }

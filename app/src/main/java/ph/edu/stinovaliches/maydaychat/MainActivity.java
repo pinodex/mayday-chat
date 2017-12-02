@@ -1,105 +1,74 @@
 package ph.edu.stinovaliches.maydaychat;
 
-import android.app.Activity;
-import android.os.Message;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import io.underdark.Underdark;
-import io.underdark.transport.Link;
-import io.underdark.transport.Transport;
-import io.underdark.transport.TransportKind;
-import io.underdark.transport.TransportListener;
-import android.provider.Settings.Secure;
-import android.os.Handler;
 import android.util.Log;
-
-import java.util.EnumSet;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
-    protected Transport transport;
+    Communication communication;
 
-    protected TransportListener transportListener;
+    EditText etNickname, etChannel;
 
-    protected Handler handler;
-
-    protected Activity activity;
-
-
+    Button btnConnect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        activity = this;
+        communication = new Communication(Application.ID, getApplicationContext());
+        communication.setFrameListener(new DefaultFrameListener());
 
-        transportListener = new DefaultTransportListener();
-        handler = new Handler(new DefaultHandlerCallback());
+        Application.communication = communication;
 
-        EnumSet<TransportKind> transportKinds = EnumSet.of(TransportKind.WIFI, TransportKind.BLUETOOTH);
+        etNickname = (EditText) findViewById(R.id.etNickname);
+        etChannel = (EditText) findViewById(R.id.etChannel);
+        btnConnect = (Button) findViewById(R.id.btnConnect);
 
-        transport = Underdark.configureTransport(
-                Application.ID,
-                Application.generateNodeId(getApplicationContext()),
-                transportListener,
-                handler,
-                this,
-                transportKinds);
-
-        transport.start();
+        btnConnect.setOnClickListener(new ConnectButtonListener());
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        transport.onMainActivityPaused();
+    protected void login(String nickname) {
+        communication.setNickname(nickname);
+        communication.startTransport();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        transport.onMainActivityResumed();
-    }
-
-    class DefaultTransportListener implements TransportListener {
+    protected class ConnectButtonListener implements Button.OnClickListener {
         @Override
-        public void transportNeedsActivity(Transport transport, ActivityCallback activityCallback) {
-            Log.d("TRANSPORT_LISTENER", "Needs Activity");
+        public void onClick(View view) {
+            String nickname  = etNickname.getText().toString();
 
-            activityCallback.accept(activity);
-        }
+            if (!nickname.matches("[a-zA-Z0-9.\\\\-_]{3,}"))  {
+                Application.showAlertDialog(MainActivity.this, "Error",
+                        "Username should consist of at least 3 alphanumeric characters.");
 
-        @Override
-        public void transportLinkConnected(Transport transport, Link link) {
-            Log.d("TRANSPORT_LISTENER", "Connected: " + link.getNodeId());
+                return;
+            }
 
-            Frame introductionFrame = new Frame("HANDSHAKE", android.os.Build.MODEL);
+            if (!etChannel.getText().toString().matches("[a-zA-Z0-9.\\\\]{3,}"))  {
+                Application.showAlertDialog(MainActivity.this, "Error",
+                        "Channel should consist of at least 3 alphanumeric characters.");
 
-            link.sendFrame(introductionFrame.getBytes());
-        }
+                return;
+            }
 
-        @Override
-        public void transportLinkDisconnected(Transport transport, Link link) {
-            Log.d("TRANSPORT_LISTENER", "Disconnected: " + link.getNodeId());
-        }
+            login(nickname);
 
-        @Override
-        public void transportLinkDidReceiveFrame(Transport transport, Link link, byte[] bytes) {
-            Frame frame = Frame.fromBytes(bytes);
-
-            Log.d("TRANSPORT_LISTENER", "Frame received message from " + link.getNodeId() + ": " + frame.getKey() + ": " + frame.getValue());
+            Intent intent = new Intent(MainActivity.this, MessagingActivity.class);
+            startActivity(intent);
         }
     }
 
-    class DefaultHandlerCallback implements Handler.Callback {
+    protected class DefaultFrameListener implements Communication.FrameListener {
 
         @Override
-        public boolean handleMessage(Message message) {
-            return true;
+        public void receive(String key, String value) {
+            Log.d("FRAME", key + ": " + value);
         }
     }
 }
