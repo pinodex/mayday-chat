@@ -32,6 +32,10 @@ public class MessageAdapter extends BaseAdapter {
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    public LinkedList<Message> getMessages() {
+        return messages;
+    }
+
     @Override
     public int getViewTypeCount() {
         return 2;

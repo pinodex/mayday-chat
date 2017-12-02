@@ -42,7 +42,8 @@
                 app:met_textColorHint="#FFF"
                 app:met_textColor="#FFF"
                 android:layout_height="match_parent"
-                android:hint="Nickname" />
+                android:hint="Nickname"
+                android:singleLine="true" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -59,7 +60,8 @@
                 android:paddingRight="10dp"
                 android:layout_height="match_parent"
                 app:met_floatingLabel="highlight"
-                android:hint="Channel"/>
+                android:hint="Channel"
+                android:singleLine="true"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"

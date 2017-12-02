@@ -25,25 +25,33 @@ import io.underdark.transport.TransportListener;
 
 public class Communication {
 
-    long nodeId;
+    private boolean started = false;
 
-    Context context;
+    private long nodeId;
 
-    Transport transport;
+    private String channelName;
 
-    TransportListener transportListener;
+    private Context context;
 
-    FrameListener frameListener;
+    private Transport transport;
 
-    HashMap<Long, Link> links = new HashMap<>();
+    private TransportListener transportListener;
 
-    LinkedList<Message> messages = new LinkedList<>();
+    private FrameListener frameListener;
 
-    LinkedList<String> messageIds = new LinkedList<>();
+    private HashMap<Long, Link> links = new HashMap<>();
 
-    NewMessageListener newMessageListener;
+    private LinkedList<Message> messages = new LinkedList<>();
 
-    EnumSet<TransportKind> transportKinds = EnumSet.of(TransportKind.WIFI, TransportKind.BLUETOOTH);
+    private LinkedList<String> messageIds = new LinkedList<>();
+
+    private LinkedList<Message> relayedMessages = new LinkedList<>();
+
+    private LinkedList<String> relayedMessageIds = new LinkedList<>();
+
+    private NewMessageListener newMessageListener;
+
+    private EnumSet<TransportKind> transportKinds = EnumSet.of(TransportKind.WIFI, TransportKind.BLUETOOTH);
 
     public Communication(Context context) {
         this.context = context;
@@ -51,20 +59,29 @@ public class Communication {
         nodeId = generateNodeId();
 
         transportListener = new DefaultTransportListener();
-    }
 
-    public void init(String nickname, String channelName) {
-        int id = Util.stringAsInt(channelName);
-
-        transport = Underdark.configureTransport(id, nodeId,
+        transport = Underdark.configureTransport(123456, nodeId,
                 transportListener, null, context, transportKinds);
     }
 
-    public LinkedList<Message> getMessages() {
-        return messages;
+    public void init(String nickname, String channelName) {
+        this.channelName = channelName;
     }
 
     public void addMessage(Message incomingMessage) {
+        if (!incomingMessage.channelName.equalsIgnoreCase(channelName)) {
+            // Relay
+            relayedMessages.add(incomingMessage);
+            relayedMessageIds.add(incomingMessage.id.toString());
+
+            if (relayedMessages.size() > 20) {
+                Message message = relayedMessages.removeFirst();
+                relayedMessageIds.remove(message.id.toString());
+            }
+
+            return;
+        }
+
         if (messageIds.contains(incomingMessage.id.toString())) {
             return;
         }
@@ -94,7 +111,21 @@ public class Communication {
     }
 
     public void startTransport() {
+        if (started) {
+            return;
+        }
+
         transport.start();
+
+        started = true;
+    }
+
+    public void stopTransport() {
+        if (transport == null) {
+            return;
+        }
+
+        transport.stop();
     }
 
     public void setFrameListener(FrameListener listener) {
@@ -111,8 +142,36 @@ public class Communication {
         return Util.stringAsLong(deviceId);
     }
 
+    public HashMap<Long, Link> getLinks() {
+        return links;
+    }
+
+    public LinkedList<Message> getMessages() {
+        return messages;
+    }
+
+    public LinkedList<String> getMessageIds() {
+        return messageIds;
+    }
+
+    public LinkedList<Message> getRelayedMessages() {
+        return relayedMessages;
+    }
+
+    public LinkedList<String> getRelayedMessageIds() {
+        return relayedMessageIds;
+    }
+
     public void sendSync(Link link) {
         for (Message message: getMessages()) {
+            String serializedMessage = message.serializeToJson();
+
+            Frame frame = new Frame("MESSAGE", serializedMessage);
+
+            link.sendFrame(frame.getBytes());
+        }
+
+        for (Message message: getRelayedMessages()) {
             String serializedMessage = message.serializeToJson();
 
             Frame frame = new Frame("MESSAGE", serializedMessage);

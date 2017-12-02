@@ -35,6 +35,8 @@
             android:paddingLeft="5dp"
             android:textColor="#000"
             android:textColorHint="#BDBDBD"
+            android:imeActionId="666"
+            android:imeActionLabel="Send"
             android:singleLine="true" />
 
         <ImageView
