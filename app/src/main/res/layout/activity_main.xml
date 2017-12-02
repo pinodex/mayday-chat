@@ -37,13 +37,14 @@
                 android:id="@+id/etNickname"
                 android:layout_width="match_parent"
                 android:paddingLeft="10dp"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:paddingRight="10dp"
                 app:met_floatingLabel="highlight"
                 app:met_textColorHint="#FFF"
                 app:met_textColor="#FFF"
                 android:layout_height="match_parent"
-                android:hint="Nickname"
-                android:singleLine="true" />
+                android:hint="Nickname" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,6 +57,7 @@
                 android:layout_width="match_parent"
                 app:met_textColorHint="#FFF"
                 app:met_textColor="#FFF"
+                android:maxLines="1"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:layout_height="match_parent"
