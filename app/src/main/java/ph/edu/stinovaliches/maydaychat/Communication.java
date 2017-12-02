@@ -107,13 +107,13 @@ public class Communication {
             }
         });
 
-        if (newMessageListener != null) {
-            newMessageListener.receive(messages, incomingMessage);
-        }
-
         if (messages.size() > 20) {
             Message message = messages.removeFirst();
             messageIds.remove(message.id.toString());
+        }
+
+        if (newMessageListener != null) {
+            newMessageListener.receive(messages, incomingMessage);
         }
     }
 
@@ -245,14 +245,9 @@ public class Communication {
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject messageObject = response.getJSONObject(i);
-                        final Message message = gson.fromJson(messageObject.toString(), Message.class);
+                        Message message = gson.fromJson(messageObject.toString(), Message.class);
 
-                        ((Activity)context).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                addMessage(message);
-                            }
-                        });
+                        addMessage(message);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -287,12 +282,7 @@ public class Communication {
             if (frame.getKey().equals("MESSAGE")) {
                 final Message message = Message.fromJson(frame.getValue());
 
-                ((Activity)context).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        addMessage(message);
-                    }
-                });
+                addMessage(message);
 
                 Log.d("TRANSPORT", "Message: " + frame.getValue());
             }
