@@ -1,5 +1,13 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'idea'
+
+idea {
+    module {
+        downloadJavadoc = true
+    }
+}
+
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
