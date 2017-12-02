@@ -79,7 +79,7 @@ public class MessagingActivity extends AppCompatActivity {
         message.id = UUID.randomUUID();
         message.senderName = Application.nickname;
         message.channelName = Application.channelName;
-        message.nodeId = Application.communication.getNodeId();
+        message.nodeId = String.valueOf(Application.communication.getNodeId());
         message.timestamp = System.currentTimeMillis() / 1000L;
         message.content = content;
 

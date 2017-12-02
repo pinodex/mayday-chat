@@ -12,7 +12,7 @@ public class Message {
 
     public UUID id;
 
-    public long nodeId;
+    public String nodeId;
 
     public String senderName;
 

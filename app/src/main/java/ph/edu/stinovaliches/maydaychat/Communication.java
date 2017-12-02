@@ -38,7 +38,7 @@ public class Communication {
 
     private boolean started = false;
 
-    private long nodeId;
+    private String nodeId;
 
     private String channelName;
 
@@ -71,7 +71,7 @@ public class Communication {
 
         transportListener = new DefaultTransportListener();
 
-        transport = Underdark.configureTransport(123456, nodeId,
+        transport = Underdark.configureTransport(123456, Long.valueOf(nodeId),
                 transportListener, null, context, transportKinds);
     }
 
@@ -107,13 +107,13 @@ public class Communication {
             }
         });
 
-        if (newMessageListener != null) {
-            newMessageListener.receive(messages, incomingMessage);
-        }
-
         if (messages.size() > 20) {
             Message message = messages.removeFirst();
             messageIds.remove(message.id.toString());
+        }
+
+        if (newMessageListener != null) {
+            newMessageListener.receive(messages, incomingMessage);
         }
     }
 
@@ -143,14 +143,14 @@ public class Communication {
         this.frameListener = listener;
     }
 
-    public long getNodeId () {
+    public String getNodeId () {
         return nodeId;
     }
 
-    public long generateNodeId() {
+    public String generateNodeId() {
         String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        return Util.stringAsLong(deviceId);
+        return String.valueOf(Util.stringAsLong(deviceId));
     }
 
     public HashMap<Long, Link> getLinks() {
@@ -280,7 +280,7 @@ public class Communication {
             frameListener.receive(frame.getKey(), frame.getValue());
 
             if (frame.getKey().equals("MESSAGE")) {
-                Message message = Message.fromJson(frame.getValue());
+                final Message message = Message.fromJson(frame.getValue());
 
                 addMessage(message);
 
