@@ -14,6 +14,8 @@ public class Application {
 
     public static Communication communication;
 
+    public static String nickname;
+
     public static void showAlertDialog(Context context, String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 

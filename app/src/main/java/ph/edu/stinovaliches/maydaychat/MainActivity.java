@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.util.UUID;
+
 public class MainActivity extends AppCompatActivity {
 
     Communication communication;
@@ -43,8 +45,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void login(String nickname) {
-        communication.setNickname(nickname);
+        Application.nickname = nickname;
         communication.startTransport();
+
+        Message m1 = new Message();
+
+        m1.id = UUID.randomUUID();
+        m1.nodeId = communication.generateNodeId();
+        m1.timestamp = 1;
+        m1.senderName = "user";
+        m1.channelName = "test";
+        m1.content = "Hello world 1";
+
+        Message m2 = new Message();
+
+        m2.id = UUID.randomUUID();
+        m2.nodeId = communication.generateNodeId();
+        m2.timestamp = 3;
+        m2.senderName = "test";
+        m2.channelName = "test";
+        m2.content = "Hello world 3";
+
+        Message m3 = new Message();
+
+        m3.id = UUID.randomUUID();
+        m3.nodeId = communication.generateNodeId();
+        m3.timestamp = 2;
+        m3.senderName = "user";
+        m3.channelName = "test";
+        m3.content = "Hello world 2";
+
+        communication.addMessage(m1);
+        communication.addMessage(m3);
+        communication.addMessage(m2);
     }
 
     protected class ConnectButtonListener implements Button.OnClickListener {

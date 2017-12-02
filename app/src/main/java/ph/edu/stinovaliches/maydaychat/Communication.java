@@ -3,11 +3,12 @@ package ph.edu.stinovaliches.maydaychat;
 import android.app.Activity;
 import android.content.Context;
 import android.provider.Settings;
-import android.widget.Toast;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.LinkedList;
 
 import io.underdark.Underdark;
 import io.underdark.transport.Link;
@@ -29,13 +30,9 @@ public class Communication {
 
     TransportListener transportListener;
 
-    LinkedHashMap<Long, Link> links;
-
-    LinkedHashMap<Long, String> nicknames;
-
     FrameListener frameListener;
 
-    String nickname;
+    LinkedList<Message> messages;
 
     public Communication(int applicationId, Context context){
         this.applicationId = applicationId;
@@ -44,60 +41,34 @@ public class Communication {
         EnumSet<TransportKind> transportKinds = EnumSet.of(
                 TransportKind.WIFI, TransportKind.BLUETOOTH);
 
-        links = new LinkedHashMap<>();
-        nicknames = new LinkedHashMap<>();
-
         transportListener = new DefaultTransportListener();
         transport = Underdark.configureTransport(applicationId, generateNodeId(),
                 transportListener, null, context, transportKinds);
+
+        messages = new LinkedList<>();
+    }
+
+    public LinkedList<Message> getMessages() {
+        return messages;
+    }
+
+    public void addMessage(Message incomingMessage) {
+        messages.add(incomingMessage);
+
+        Collections.sort(messages, new Comparator<Message>() {
+            @Override
+            public int compare(Message message, Message nextMessage) {
+                return message.timestamp - nextMessage.timestamp;
+            }
+        });
     }
 
     public void startTransport() {
         transport.start();
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public LinkedHashMap<Long, Link> getLinks() {
-        return links;
-    }
-
-    public LinkedHashMap<Long, String> getNicknames() {
-        return nicknames;
-    }
-
     public void send(Link link, Frame frame) {
         link.sendFrame(frame.getBytes());
-    }
-
-    public void send(long nodeId, Frame frame) {
-        if (!links.containsKey(nodeId)) {
-            return;
-        }
-
-        Link link = links.get(nodeId);
-
-        send(link, frame);
-    }
-
-    public void broadcast(Frame frame) {
-        for (Map.Entry<Long, Link> entry: getLinks().entrySet()) {
-            Link link = entry.getValue();
-
-            send(link, frame);
-        }
-    }
-
-    public void initiateHandshake(Link link) {
-        Frame frame = new Frame("SYN", getNickname());
-
-        send(link, frame);
     }
 
     public void setFrameListener(FrameListener listener) {
@@ -130,15 +101,12 @@ public class Communication {
 
         @Override
         public void transportLinkConnected(Transport transport, Link link) {
-            initiateHandshake(link);
 
-            links.put(link.getNodeId(), link);
         }
 
         @Override
         public void transportLinkDisconnected(Transport transport, Link link) {
-            links.remove(link.getNodeId());
-            nicknames.remove(link.getNodeId());
+
         }
 
         @Override
@@ -146,13 +114,6 @@ public class Communication {
             Frame frame = Frame.fromBytes(bytes);
 
             frameListener.receive(frame.getKey(), frame.getValue());
-
-            // Acknowledge client
-            if (frame.getKey().equals("SYN")) {
-                nicknames.put(link.getNodeId(), frame.getValue());
-
-                Toast.makeText(context, frame.getValue() + " is connected", Toast.LENGTH_LONG).show();
-            }
         }
     }
 
