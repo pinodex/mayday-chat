@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    android:background="#eaeaea"
+    android:background="#e6dede"
     android:weightSum="1"
     android:orientation="horizontal">
 
@@ -39,18 +39,20 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:padding="3dp"
                 android:layout_weight="2.5">
+
                 <EditText
                     android:id="@+id/messageComposer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingLeft="10dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="5dp"
                     android:background="@drawable/message_border"
-                    android:layout_marginBottom="5dp"
-                    android:textColorHint="#BDBDBD"
+                    android:hint="Write a message"
+                    android:paddingLeft="8dp"
                     android:textColor="#000"
-                    android:hint="Write a message" />
+                    android:textColorHint="#BDBDBD" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"
