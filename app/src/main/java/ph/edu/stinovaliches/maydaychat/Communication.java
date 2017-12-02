@@ -3,12 +3,11 @@ package ph.edu.stinovaliches.maydaychat;
 import android.app.Activity;
 import android.content.Context;
 import android.provider.Settings;
+import android.widget.Toast;
 
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 import io.underdark.Underdark;
 import io.underdark.transport.Link;
@@ -151,6 +150,8 @@ public class Communication {
             // Acknowledge client
             if (frame.getKey().equals("SYN")) {
                 nicknames.put(link.getNodeId(), frame.getValue());
+
+                Toast.makeText(context, frame.getValue() + " is connected", Toast.LENGTH_LONG).show();
             }
         }
     }
