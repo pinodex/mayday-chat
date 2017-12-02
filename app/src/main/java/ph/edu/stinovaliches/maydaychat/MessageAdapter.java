@@ -62,7 +62,7 @@ public class MessageAdapter extends BaseAdapter {
 
             convertView = mInflater.inflate(R.layout.layout_message_receiver, null);
 
-            if (nickname.equalsIgnoreCase(message.senderName)) {
+            if (Application.communication.getNodeId() == message.nodeId) {
                 convertView = mInflater.inflate(R.layout.layout_message_sender, null);
             }
 

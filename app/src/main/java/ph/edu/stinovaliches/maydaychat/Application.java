@@ -10,11 +10,9 @@ import android.support.v7.app.AlertDialog;
 
 public class Application {
 
-    public static int ID = 1;
-
     public static Communication communication;
 
-    public static String nickname;
+    public static String nickname, channelName;
 
     public static void showAlertDialog(Context context, String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

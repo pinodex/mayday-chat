@@ -3,6 +3,7 @@ package ph.edu.stinovaliches.maydaychat;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
             }, 1);
         }
 
-        communication = new Communication(Application.ID, MainActivity.this);
+        communication = new Communication(MainActivity.this);
         communication.setFrameListener(new DefaultFrameListener());
 
         Application.communication = communication;
@@ -44,46 +45,30 @@ public class MainActivity extends AppCompatActivity {
         btnConnect.setOnClickListener(new ConnectButtonListener());
     }
 
-    protected void login(String nickname) {
+    protected void login(String nickname, String channelName) {
         Application.nickname = nickname;
+        Application.channelName = channelName;
+
+        communication.init(nickname, channelName);
         communication.startTransport();
 
-        Message m1 = new Message();
+        final Handler handler = new Handler();
+        final int delay = 1000; //milliseconds
 
-        m1.id = UUID.randomUUID();
-        m1.nodeId = communication.generateNodeId();
-        m1.timestamp = 1;
-        m1.senderName = "user";
-        m1.channelName = "test";
-        m1.content = "Hello world 1";
+        handler.postDelayed(new Runnable(){
+            public void run(){
+                communication.broadcastSync();
 
-        Message m2 = new Message();
-
-        m2.id = UUID.randomUUID();
-        m2.nodeId = communication.generateNodeId();
-        m2.timestamp = 3;
-        m2.senderName = "test";
-        m2.channelName = "test";
-        m2.content = "Hello world 3";
-
-        Message m3 = new Message();
-
-        m3.id = UUID.randomUUID();
-        m3.nodeId = communication.generateNodeId();
-        m3.timestamp = 2;
-        m3.senderName = "user";
-        m3.channelName = "test";
-        m3.content = "Hello world 2";
-
-        communication.addMessage(m1);
-        communication.addMessage(m3);
-        communication.addMessage(m2);
+                handler.postDelayed(this, delay);
+            }
+        }, delay);
     }
 
     protected class ConnectButtonListener implements Button.OnClickListener {
         @Override
         public void onClick(View view) {
             String nickname  = etNickname.getText().toString();
+            String channelName = etChannel.getText().toString();
 
             if (!nickname.matches("[a-zA-Z0-9.\\\\-_]{3,}"))  {
                 Application.showAlertDialog(MainActivity.this, "Error",
@@ -92,14 +77,14 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            if (!etChannel.getText().toString().matches("[a-zA-Z0-9.\\\\]{3,}"))  {
+            if (!channelName.matches("[a-zA-Z0-9.\\\\]{3,}"))  {
                 Application.showAlertDialog(MainActivity.this, "Error",
                         "Channel should consist of at least 3 alphanumeric characters.");
 
                 return;
             }
 
-            login(nickname);
+            login(nickname, channelName);
 
             Intent intent = new Intent(MainActivity.this, MessagingActivity.class);
             startActivity(intent);

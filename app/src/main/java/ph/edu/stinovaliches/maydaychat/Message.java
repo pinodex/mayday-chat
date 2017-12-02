@@ -1,5 +1,7 @@
 package ph.edu.stinovaliches.maydaychat;
 
+import com.google.gson.Gson;
+
 import java.util.UUID;
 
 /**
@@ -16,8 +18,20 @@ public class Message {
 
     public String channelName;
 
-    public int timestamp;
+    public long timestamp;
 
     public String content;
+
+    public String serializeToJson() {
+        Gson gson = new Gson();
+
+        return gson.toJson(this);
+    }
+
+    public static Message fromJson(String data) {
+        Gson gson = new Gson();
+
+        return gson.fromJson(data, Message.class);
+    }
 
 }
