@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
+    android:background="#e2e43f3f"
     android:layout_height="match_parent"
     tools:context="ph.edu.stinovaliches.maydaychat.MainActivity">
 
@@ -17,14 +18,31 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:gravity="center"
+            android:layout_weight="4">
+            <ImageView
+                android:layout_width="350dp"
+                android:layout_height="190dp"
+                android:src="@drawable/logo"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_weight="1">
-            <EditText
+
+            <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/etNickname"
                 android:layout_width="match_parent"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                app:met_floatingLabel="highlight"
+                app:met_textColorHint="#FFF"
+                app:met_textColor="#FFF"
                 android:layout_height="match_parent"
-                android:hint="Nickname"/>
+                android:hint="Nickname" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,22 +50,31 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_weight="1">
-            <EditText
+            <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/etChannel"
                 android:layout_width="match_parent"
+                app:met_textColorHint="#FFF"
+                app:met_textColor="#FFF"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:layout_height="match_parent"
+                app:met_floatingLabel="highlight"
                 android:hint="Channel"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
+            android:layout_marginTop="5dp"
             android:layout_weight="1">
             <Button
                 android:id="@+id/btnConnect"
                 android:layout_width="match_parent"
+                android:layout_margin="8dp"
+                android:textColor="#e2e70707"
                 android:layout_height="match_parent"
+                android:background="@drawable/button"
                 android:text="Connect"/>
         </LinearLayout>
     </LinearLayout>

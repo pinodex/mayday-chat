@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#e2e43f3f"
     android:gravity="center"
     tools:context="ph.edu.stinovaliches.maydaychat.SplashScreen">
 
