@@ -5,6 +5,16 @@ import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,6 +23,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import cz.msebera.android.httpclient.Header;
 import io.underdark.Underdark;
 import io.underdark.transport.Link;
 import io.underdark.transport.Transport;
@@ -184,6 +195,65 @@ public class Communication {
         for (Link link: links.values()) {
             sendSync(link);
         }
+    }
+
+    public void uploadMessages() {
+        Gson gson = new Gson();
+
+        String data = gson.toJson(messages);
+        String relayedData = gson.toJson(relayedMessages);
+
+        RequestParams params = new RequestParams();
+        params.put("data", data);
+
+        HttpClient.post("/message/send", params, new TextHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseBody) {
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseBody, Throwable error) {
+
+            }
+        });
+
+        RequestParams relayedParams = new RequestParams();
+        relayedParams.put("data", relayedData);
+
+        HttpClient.post("/message/send", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+            }
+        });
+    }
+
+    public void downloadMessages() {
+        HttpClient.get("/message/get-all", null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+
+                Gson gson = new Gson();
+
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject messageObject = response.getJSONObject(i);
+                        Message message = gson.fromJson(messageObject.toString(), Message.class);
+
+                        addMessage(message);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     public class DefaultTransportListener implements TransportListener {

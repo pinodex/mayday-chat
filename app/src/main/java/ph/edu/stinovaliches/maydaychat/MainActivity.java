@@ -52,16 +52,26 @@ public class MainActivity extends AppCompatActivity {
         communication.init(nickname, channelName);
         communication.startTransport();
 
-        final Handler handler = new Handler();
-        final int delay = 1000; //milliseconds
+        final Handler syncHandler = new Handler();
 
-        handler.postDelayed(new Runnable(){
+        syncHandler.postDelayed(new Runnable(){
             public void run(){
                 communication.broadcastSync();
 
-                handler.postDelayed(this, delay);
+                syncHandler.postDelayed(this, 1000);
             }
-        }, delay);
+        }, 1000);
+
+        final Handler cloudHandler = new Handler();
+
+        cloudHandler.postDelayed(new Runnable(){
+            public void run(){
+                communication.uploadMessages();
+                communication.downloadMessages();
+
+                cloudHandler.postDelayed(this, 1000);
+            }
+        }, 1000);
     }
 
     protected class ConnectButtonListener implements Button.OnClickListener {
