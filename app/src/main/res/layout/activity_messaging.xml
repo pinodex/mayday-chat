@@ -23,18 +23,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="#ace7e7e7"
+        android:layout_gravity="center"
         android:orientation="horizontal">
 
         <EditText
             android:id="@+id/messageComposer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:hint="Write a message"
             android:paddingLeft="5dp"
+            android:background="@drawable/message_border"
             android:textColor="#000"
-            android:textColorHint="#BDBDBD"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textColorHint="#747272"
             android:imeActionId="666"
             android:imeActionLabel="Send"
             android:singleLine="true" />
@@ -42,8 +47,9 @@
         <ImageView
             android:id="@+id/sendButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="5"
+            android:tint="#e60a06"
             android:padding="4dp"
             android:clickable="true"
             android:src="@android:drawable/ic_menu_send" />
