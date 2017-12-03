@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-
+            android:textSize="16dp"
             android:text="Sender Name" />
 
         <TextView
@@ -51,5 +51,16 @@
             android:padding="16dp"
             android:text="Message Content"
             android:textColor="#000" />
+
+        <TextView
+            android:id="@+id/timestamp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:textColor="#999"
+            android:textAlignment="viewEnd"
+            android:textSize="11dp"
+            android:text="09/09/1999 09:00 AM" />
     </LinearLayout>
 </LinearLayout>

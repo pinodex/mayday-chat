@@ -11,6 +11,9 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 
 /**
@@ -69,9 +72,13 @@ public class MessageAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.layout_message_sender, null);
         }
 
+        Date sendDate = new Date(message.timestamp * 1000);
+        DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
+
         holder.senderName = convertView.findViewById(R.id.senderName);
         holder.senderInitial = convertView.findViewById(R.id.chatHeadContent);
         holder.messageContent = convertView.findViewById(R.id.messageContent);
+        holder.timestamp = convertView.findViewById(R.id.timestamp);
 
         convertView.setTag(holder);
 
@@ -79,12 +86,13 @@ public class MessageAdapter extends BaseAdapter {
         holder.senderInitial.setText(
                 String.valueOf(Character.toUpperCase(message.senderName.charAt(0))));
         holder.messageContent.setText(message.content);
+        holder.timestamp.setText(dateFormat.format(sendDate));
 
         return convertView;
     }
 
     public static class ViewHolder {
-        public TextView senderName, senderInitial, messageContent;
+        public TextView senderName, senderInitial, messageContent, timestamp;
     }
 
 }
