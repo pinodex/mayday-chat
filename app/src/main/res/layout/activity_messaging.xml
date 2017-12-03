@@ -55,7 +55,8 @@
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:clickable="true"
-            android:padding="4dp"
-            android:src="@android:drawable/ic_menu_send" />
+            android:padding="10dp"
+            android:tint="#e43f3f"
+            android:src="@drawable/ic_send_black_48dp" />
     </LinearLayout>
 </LinearLayout>
