@@ -80,9 +80,9 @@ public class MainActivity extends AppCompatActivity {
             String nickname  = etNickname.getText().toString();
             String channelName = etChannel.getText().toString();
 
-            if (!nickname.matches("[a-zA-Z0-9.\\\\-_]{3,}"))  {
+            if (nickname.trim().length() == 0)  {
                 Application.showAlertDialog(MainActivity.this, "Error",
-                        "Username should consist of at least 3 alphanumeric characters.");
+                        "Please enter a nickname");
 
                 return;
             }
